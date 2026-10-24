@@ -12,7 +12,7 @@ Desde esta carpeta:
 npm start
 ```
 
-Abre http://localhost:8080. No requiere instalar dependencias ni credenciales; requiere Python 3 para servir archivos. La app funciona en un navegador moderno. Las fuentes web son opcionales y tienen respaldo local.
+Abre http://localhost:8080. No requiere instalar dependencias ni credenciales; requiere Python 3 para servir archivos y el puente local. La app funciona en un navegador moderno. Las fuentes web son opcionales y tienen respaldo local.
 
 1. Pulsa **Iniciar misión**.
 2. Conduce con WASD, flechas o botones táctiles. Visita las tres balizas.
@@ -22,6 +22,16 @@ Abre http://localhost:8080. No requiere instalar dependencias ni credenciales; r
 6. Exporta la sesión JSON con muestras sintéticas, estados y trayectoria.
 
 Cuatro temas: Oscuro, Plata, Morado y Océano. La preferencia se guarda en el navegador.
+
+## Sensores reales y adaptadores
+
+En el panel **Sensores reales / Esta Mac**, pulsa Detectar sensores. El puente local consulta temperaturas internas IOHID, inventario de cámara/audio/USB/serie y alimentación. La lectura térmica es experimental y puede no estar disponible en otros equipos. No necesita root.
+
+Cámara y micrófono se activan solo mediante sus botones y permisos del sistema. El micrófono muestra RMS y dBFS, no presión acústica calibrada. La ubicación solicitada al sistema muestra su precisión; no significa que exista un GPS físico. El mando puede activarse para conducir. La detección de movimiento solo muestra datos si el navegador los recibe.
+
+La base de sensores externos acepta JSONL desde un puerto serie o un programa adaptador. Valida trama, valores y unidades, conserva muestras localmente e indica caducidad. Consulta [la guía de adaptadores](docs/sensor-adapters.md). No abre puertos por sí sola ni interpreta protocolos desconocidos.
+
+El servidor escucha únicamente en `127.0.0.1:8080`. Los datos reales no se exportan con la sesión del juego ni se publican. La app alojada tiene capacidades del navegador; el inventario y los termómetros necesitan ejecutar la copia local.
 
 ## Taller de impresión y contrapesos
 
@@ -46,7 +56,7 @@ Las masas se expresan en g y las alturas en mm respecto del eje. Un resultado ne
 - Integración fija a 50 Hz con tiempo de cuadro acotado; no es un lazo embebido de tiempo real.
 - Traslación simplificada independiente del modelo angular; la configuración de masas **no cambia la dinámica del juego**.
 - Paro inmediato del juego, batería sintética y detección de fallo por ángulo. No reproduce la caída física al cortar motores.
-- Sin UART, motores, sensores reales, video, IA, navegación autónoma ni firmware funcional.
+- El juego no se conecta a UART ni motores, ni implementa IA, navegación autónoma o firmware funcional. Los sensores reales tienen panel propio, separado de la simulación.
 - Ganancias de simulación adimensionales: no trasladarlas a un robot real.
 
 ## Estructura
@@ -60,7 +70,8 @@ docs/test-plan.md           Verificación y gates físicos pendientes
 hardware/bom/               Datos requeridos antes de seleccionar hardware
 firmware/balance-controller/ Estado y próximos pasos del MCU
 raspberry/teleop/            Estado y próximos pasos de la pasarela
-tests/                      Pruebas del modelo y cálculos
+local/                      Puente Mac y base de adaptadores externos
+tests/                      Pruebas del modelo, cálculos y contrato de sensores
 ```
 
 ## Validar
@@ -69,6 +80,7 @@ Node.js 24 o compatible con el runner de pruebas incorporado:
 
 ```sh
 npm test
+python3 -m unittest discover -s tests -p 'test_*.py'
 ```
 
 Pruebas de movimiento desarmado, pérdida de enlace, paro/caída, rayos, sensores, puntuación, contrapesos, STL y respuesta PID. No sustituyen pruebas físicas.

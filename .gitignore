@@ -6,3 +6,5 @@ node_modules/
 *.log
 coverage/
 .openai/local/
+__pycache__/
+local/runtime/

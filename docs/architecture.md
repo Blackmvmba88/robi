@@ -1,8 +1,8 @@
 # Arquitectura v0.2
 
-La app es estática y trabaja enteramente en el navegador. `sim.js` implementa el mundo, movimiento, rayos y dinámica angular; `workshop.js` contiene cálculos de masa y generación de STL; `app.js` conecta entradas, visualización y exportación.
+La app tiene un cliente estático y un puente local opcional. `sim.js` implementa el mundo, movimiento, rayos y dinámica angular; `workshop.js` contiene cálculos de masa y generación de STL; `app.js` conecta entradas, visualización y exportación.
 
-No hay backend ni conexión a dispositivos. El almacenamiento local solo recuerda el tema. Sesiones y modelos se descargan por acción del usuario.
+La simulación no conecta a motores. El servidor local Python expone un puente de lectura macOS y caché de adaptadores; cámara, audio y ubicación funcionan mediante APIs del navegador con permiso. El almacenamiento local solo recuerda el tema. Sesiones y modelos se descargan por acción del usuario.
 
 El futuro robot separará Raspberry Pi (interfaz, video y registro) del MCU (IMU, encoders y control). Esa arquitectura aún no está implementada. El documento original conserva las decisiones conceptuales y los gates físicos.
 
