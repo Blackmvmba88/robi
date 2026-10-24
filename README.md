@@ -21,7 +21,7 @@ Abre http://localhost:8080. No requiere instalar dependencias ni credenciales; r
 5. Ajusta Kp, Ki y Kd. Observa inclinación, velocidad angular, integral y salida limitada.
 6. Exporta la sesión JSON con muestras sintéticas, estados y trayectoria.
 
-Cuatro temas: Oscuro, Plata, Morado y Océano. La preferencia se guarda en el navegador.
+Siete temas: Oscuro, Plata, Morado, Océano, Atardecer ámbar, Rosa del desierto y Crepúsculo. Los tres atardeceres usan gradientes coordinados con un ciclo suave de 90 segundos. Se pueden pausar, respetan movimiento reducido y conservan tema/pausa al recargar. Atardecer ámbar es la opción inicial.
 
 ## Sensores reales y adaptadores
 

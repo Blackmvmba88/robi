@@ -6,7 +6,7 @@
 
 ## Navegador
 
-Comprobar inicio, selección LiDAR, perturbación, corte de enlace, paro, reinicio y actualización de presupuesto de masas. Revisar tema claro y oscuro. La captura visual y viewport móvil requieren un navegador con esas capacidades habilitadas.
+Comprobar inicio, selección LiDAR, perturbación, corte de enlace, paro, reinicio y actualización de presupuesto de masas. Verificados por controles: temas Plata y Atardecer ámbar, pausa y persistencia de preferencias al recargar. La captura visual y viewport móvil requieren un navegador con esas capacidades habilitadas.
 
 ## Puente Mac y adaptadores
 
