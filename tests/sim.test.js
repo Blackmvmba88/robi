@@ -1,0 +1,11 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {createState,step,raycast,sense} from '../dist/sim.js';
+test('desarmado no se mueve',()=>{const s=createState();step(s,{forward:1,turn:1},.02);assert.equal(s.x,1);assert.equal(s.v,0)});
+test('enlace perdido lleva consigna a cero',()=>{const s=createState();s.state='TELEOP';s.v=1;s.link=false;for(let i=0;i<200;i++)step(s,{forward:1,turn:1},.02);assert.ok(s.v<.00001);assert.equal(s.a,.35)});
+test('paro y caída bloquean movimiento',()=>{const s=createState();s.state='BALANCING';s.stop=true;step(s,{forward:1},.02);assert.equal(s.v,0);s.stop=false;s.pitch=1;step(s,{forward:0,turn:0},.02);assert.equal(s.state,'FAULT')});
+test('rayos detectan obstáculo y pared',()=>{assert.equal(raycast(1,1,0,20,[]),11);assert.ok(Math.abs(raycast(0,2,0,10)-2.35)<1e-6)});
+test('sensores acotados y sin ruido reproducibles',()=>{const s=createState();for(const key of ['tof','lidar','camera','ultrasonic'])assert.ok(sense(s,key,0).every(r=>Number.isFinite(r.d)&&r.d>=0))});
+test('misión puntúa cada baliza una sola vez',()=>{const s=createState();s.x=3;s.y=5;for(let i=0;i<20;i++)step(s,{forward:0,turn:0},.02);assert.equal(s.score,100)});
+import {massBudget,plateSTL} from '../dist/workshop.js';
+test('contrapeso alcanza el centro solicitado',()=>{const r=massBudget({width:180,depth:140,thickness:4,density:1.24,mass:1600,height:100,plateHeight:60,target:80,ballastHeight:-30});assert.ok(Math.abs((r.total*r.com+r.ballast*-30)/(r.total+r.ballast)-80)<1e-8);assert.ok(Number.isNaN(massBudget({width:180,depth:140,thickness:4,density:1.24,mass:1600,height:100,plateHeight:60,target:80,ballastHeight:80}).ballast))});
+test('STL contiene 12 triángulos y dimensiones',()=>{const s=plateSTL(180,140,4);assert.equal((s.match(/facet normal/g)||[]).length,12);assert.ok(s.includes('vertex 180 140 4'))});
+test('PID amortigua perturbación y ganancias nulas fallan',()=>{const a=createState(),b=createState();a.state=b.state='BALANCING';a.rate=b.rate=1.8;for(let i=0;i<200;i++){step(a,{forward:0,turn:0},.02);step(b,{forward:0,turn:0,pid:{kp:0,ki:0,kd:0}},.02)}assert.ok(Math.abs(a.pitch)<.01);assert.equal(b.state,'FAULT')});
